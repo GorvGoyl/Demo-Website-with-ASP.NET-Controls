@@ -14,25 +14,12 @@
 <asp:updatepanel id="up1" runat="server">
   <contenttemplate>
     <div>
-        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="#DEBA84"
-            BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2"
-            DataKeyNames="ID" Height="213px" Width="122px" ShowFooter="True" 
+        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="White"
+            BorderColor="#CC9966" BorderStyle="None" BorderWidth="1px" CellPadding="4"
+            DataKeyNames="ID" Height="29px" Width="784px" ShowFooter="True" 
             onrowcommand="GridView1_RowCommand">
             <Columns>
-                <asp:TemplateField>
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lbEdit" CommandArgument='<%# Eval("Id") %>' CommandName="EditRow"
-                            ForeColor="#8C4510" runat="server">Edit</asp:LinkButton>
-                        <asp:LinkButton ID="lbDelete" OnClientClick="return confirm('Are you sure you want to delete this row');"  CommandArgument='<%# Eval("Id") %>' CommandName="DeleteRow"
-                            ForeColor="#8C4510" runat="server" CausesValidation="false">Delete</asp:LinkButton>
-                    </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:LinkButton ID="lbUpdate" CommandArgument='<%# Eval("Id") %>' CommandName="UpdateRow"
-                            ForeColor="#8C4510" runat="server">Update</asp:LinkButton>
-                        <asp:LinkButton ID="lbCancel"  CommandArgument='<%# Eval("Id") %>' CommandName="CancelUpdate"
-                            ForeColor="#8C4510" runat="server" CausesValidation="false">Cancel</asp:LinkButton>
-                    </EditItemTemplate>
-                </asp:TemplateField>
+                
                 <asp:TemplateField HeaderText="ID" SortExpression="ID">
                     <EditItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Eval("ID") %>'></asp:Label>
@@ -40,9 +27,7 @@
                     <ItemTemplate>
                         <asp:Label ID="Label5" runat="server" Text='<%# Bind("ID") %>'></asp:Label>
                     </ItemTemplate>
-                    <FooterTemplate>
-                        <asp:LinkButton CommandName = "InsertRow" ID="lbInsert" ValidationGroup="INSERT"  ForeColor="#8C4510" runat="server">Insert</asp:LinkButton>
-                    </FooterTemplate>
+                  
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="UserName" SortExpression="UserName">
                     <EditItemTemplate>
@@ -115,17 +100,36 @@
                             ForeColor="Red">
                         </asp:RequiredFieldValidator>
                     </FooterTemplate>
+                    
                 </asp:TemplateField>
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:LinkButton ID="lbEdit" CommandArgument='<%# Eval("Id") %>' CommandName="EditRow"
+                            ForeColor="#8C4510" runat="server">Edit</asp:LinkButton>
+                        <asp:LinkButton ID="lbDelete" OnClientClick="return confirm('Are you sure you want to delete this row');"  CommandArgument='<%# Eval("Id") %>' CommandName="DeleteRow"
+                            ForeColor="#8C4510" runat="server" CausesValidation="false">Delete</asp:LinkButton>
+                    </ItemTemplate>
+                    <EditItemTemplate>
+                        <asp:LinkButton ID="lbUpdate" CommandArgument='<%# Eval("Id") %>' CommandName="UpdateRow"
+                            ForeColor="#8C4510" runat="server">Update</asp:LinkButton>
+                        <asp:LinkButton ID="lbCancel"  CommandArgument='<%# Eval("Id") %>' CommandName="CancelUpdate"
+                            ForeColor="#8C4510" runat="server" CausesValidation="false">Cancel</asp:LinkButton>
+                    </EditItemTemplate>
+                     <FooterTemplate>
+                        <asp:LinkButton CommandName = "InsertRow" ID="lbInsert" ValidationGroup="INSERT"  ForeColor="#8C4510" runat="server">Insert</asp:LinkButton>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                 
             </Columns>
-            <FooterStyle BackColor="#F7DFB5" ForeColor="#8C4510" />
-            <HeaderStyle BackColor="#A55129" Font-Bold="True" ForeColor="White" />
-            <PagerStyle ForeColor="#8C4510" HorizontalAlign="Center" />
-            <RowStyle BackColor="#FFF7E7" ForeColor="#8C4510" />
-            <SelectedRowStyle BackColor="#738A9C" Font-Bold="True" ForeColor="White" />
-            <SortedAscendingCellStyle BackColor="#FFF1D4" />
-            <SortedAscendingHeaderStyle BackColor="#B95C30" />
-            <SortedDescendingCellStyle BackColor="#F1E5CE" />
-            <SortedDescendingHeaderStyle BackColor="#93451F" />
+            <FooterStyle BackColor="#FFFFCC" ForeColor="#330099" />
+            <HeaderStyle BackColor="#990000" Font-Bold="True" ForeColor="#FFFFCC" />
+            <PagerStyle ForeColor="#330099" HorizontalAlign="Center" BackColor="#FFFFCC" />
+            <RowStyle BackColor="White" ForeColor="#330099" />
+            <SelectedRowStyle BackColor="#FFCC66" Font-Bold="True" ForeColor="#663399" />
+            <SortedAscendingCellStyle BackColor="#FEFCEB" />
+            <SortedAscendingHeaderStyle BackColor="#AF0101" />
+            <SortedDescendingCellStyle BackColor="#F6F0C0" />
+            <SortedDescendingHeaderStyle BackColor="#7E0000" />
         </asp:GridView>
         <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="INSERT" runat="server"
             ForeColor="Red" />
