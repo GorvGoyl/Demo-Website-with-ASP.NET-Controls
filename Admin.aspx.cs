@@ -12,11 +12,12 @@ public partial class Admin : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        lblMessage.Text = "";
         if (!IsPostBack)
         {
+          
             BindGridViewData();
         }
-        lblMessage.Text = "";
 
     }
     private void BindGridViewData()
@@ -28,8 +29,8 @@ public partial class Admin : System.Web.UI.Page
     {
         if (e.CommandName == "EditRow")
         {
-            int rowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
-            GridView1.EditIndex = rowIndex;
+            int RowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
+            GridView1.EditIndex = RowIndex;
             BindGridViewData();
         }
         else if (e.CommandName == "DeleteRow")
@@ -44,16 +45,18 @@ public partial class Admin : System.Web.UI.Page
         }
         else if (e.CommandName == "UpdateRow")
         {
-            int rowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
+            int RowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
 
             HttpPostedFile FileContent = Request.Files["myEditFile"];
             string FileName = "";
+            string UniqueFileName = "";
+            string Id = (e.CommandArgument.ToString());
             UserDataAccessLayer.DeleteFile(e.CommandArgument.ToString());
             if (FileContent.ContentLength != 0)
             {
-                string fileExtension = System.IO.Path.GetExtension(FileContent.FileName);
+                string FileExtension = System.IO.Path.GetExtension(FileContent.FileName);
 
-                if (fileExtension.ToLower() != ".doc" && fileExtension.ToLower() != ".docx" && fileExtension.ToLower() != ".pdf")
+                if (FileExtension.ToLower() != ".doc" && FileExtension.ToLower() != ".docx" && FileExtension.ToLower() != ".pdf")
                 {
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                     lblMessage.Text = "Only files with .doc or.docx or .pdf extension are allowed";
@@ -68,42 +71,48 @@ public partial class Admin : System.Web.UI.Page
                 }
 
                 FileName = Path.GetFileName(FileContent.FileName);
-
-                FileContent.SaveAs(Server.MapPath(Path.Combine("~/Uploads/", FileName)));
+                FileName = FileName.Replace(FileExtension, "");
+                UniqueFileName = UserDataAccessLayer.GetUniqueName(FileName, Id, FileExtension.ToLower());
+                try
+                {
+                    FileContent.SaveAs(Server.MapPath(Path.Combine("~/Uploads/", UniqueFileName)));
+                }
+                catch (System.IO.DirectoryNotFoundException exception)
+                {
+                    
+                    Response.Write(exception);
+                }
             }
 
-            string Id = (e.CommandArgument.ToString());
-            string Username = ((TextBox)GridView1.Rows[rowIndex].FindControl("TextBox1")).Text;
-            string Email = ((TextBox)GridView1.Rows[rowIndex].FindControl("TextBox2")).Text;
-            string Password = ((TextBox)GridView1.Rows[rowIndex].FindControl("TextBox3")).Text;
-            string Country = ((TextBox)GridView1.Rows[rowIndex].FindControl("TextBox4")).Text;
-            UserDataAccessLayer.UpdateUser(Id, Username, Email, Password, Country, FileName);
+            
+           
+            string Username = ((TextBox)GridView1.Rows[RowIndex].FindControl("TextBox1")).Text;
+            string Email = ((TextBox)GridView1.Rows[RowIndex].FindControl("TextBox2")).Text;
+            string Password = ((TextBox)GridView1.Rows[RowIndex].FindControl("TextBox3")).Text;
+            string Country = ((TextBox)GridView1.Rows[RowIndex].FindControl("TextBox4")).Text;
+            UserDataAccessLayer.UpdateUser(Id, Username, Email, Password, Country, UniqueFileName);
 
             GridView1.EditIndex = -1;
             BindGridViewData();
         }
         else if (e.CommandName == "InsertRow")
         {
-            // string fileName;
-            //if (FileUpload1.HasFile)
-            //{
-            //    fileName = FileUpload1.FileName;
-            //    // Get the FileContent size
-            //}
-            //else {
-            //    fileName = null;
-            //}
-
-            //var fileName1 = ((FileUpload)GridView1.FindControl("FileUpload1")).FileName;
-            //var fileName =((FileUpload) GridView1.FooterRow.FindControl("txtFileUpload")).PostedFile.FileName;
+            String NewGUID = Guid.NewGuid().ToString();
+            NewGUID = NewGUID.Remove(5, NewGUID.Length - 5);
             HttpPostedFile FileContent = Request.Files["myFile"];
             string FileName = "";
-
-            if (FileContent.ContentLength != 0)
+            string UniqueFileName = "";
+            if (Path.GetFileName(FileContent.FileName) != "" && FileContent.ContentLength == 0)
             {
-                string fileExtension = System.IO.Path.GetExtension(FileContent.FileName);
+                lblMessage.ForeColor = System.Drawing.Color.Brown;
+                lblMessage.Text = "Empty File uploaded!";
+                
+            }
+            if (Path.GetFileName(FileContent.FileName) != "")
+            {
+                string FileExtension = System.IO.Path.GetExtension(FileContent.FileName);
 
-                if (fileExtension.ToLower() != ".doc" && fileExtension.ToLower() != ".docx" && fileExtension.ToLower() != ".pdf")
+                if (FileExtension.ToLower() != ".doc" && FileExtension.ToLower() != ".docx" && FileExtension.ToLower() != ".pdf")
                 {
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                     lblMessage.Text = "Only files with .doc or.docx or .pdf extension are allowed";
@@ -118,16 +127,25 @@ public partial class Admin : System.Web.UI.Page
                 }
 
                 FileName = Path.GetFileName(FileContent.FileName);
-                FileContent.SaveAs(Server.MapPath(Path.Combine("~/Uploads/", FileName)));
-               // File.Copy(Server.MapPath(Path.Combine("~/Uploads/", FileName)));
-            }
+                FileName = FileName.Replace(FileExtension,"");
+                 UniqueFileName = UserDataAccessLayer.GetUniqueName(FileName, NewGUID, FileExtension.ToLower());
+                 try
+                 {
+                     FileContent.SaveAs(Server.MapPath(Path.Combine("~/Uploads/", UniqueFileName)));
+                 }
+                 catch (System.IO.DirectoryNotFoundException exception)
+                 {
 
+                     Response.Write(exception);
+                 }
+            }
+            
             string Username = ((TextBox)GridView1.FooterRow.FindControl("txtUsername")).Text;
             string Email = ((TextBox)GridView1.FooterRow.FindControl("txtEmail")).Text;
             string Password = ((TextBox)GridView1.FooterRow.FindControl("txtPassword")).Text;
             string Country = ((TextBox)GridView1.FooterRow.FindControl("txtCountry")).Text;
 
-            UserDataAccessLayer.InsertUser(Username, Email, Password, Country, FileName);
+            UserDataAccessLayer.InsertUser(NewGUID.ToString(), Username, Email, Password, Country, UniqueFileName);
 
             BindGridViewData();
 
@@ -136,11 +154,30 @@ public partial class Admin : System.Web.UI.Page
         else if (e.CommandName == "Download")
         {
             Response.Clear();
-            Response.ContentType = "application/octet-stream";
-            Response.AppendHeader("Content-Disposition", "filename=" + e.CommandArgument);
-            Response.TransmitFile(Server.MapPath("~/Uploads/") + e.CommandArgument);
-            Response.End();
+       
+            if (File.Exists(Server.MapPath("~/Uploads/") + e.CommandArgument))
+            {               
+                Response.ContentType = "application/octet-stream";
+                Response.AppendHeader("Content-Disposition", "filename=" + e.CommandArgument.ToString().Remove(0, 6));
+                Response.TransmitFile(Server.MapPath("~/Uploads/") + e.CommandArgument);
+                Response.End();
+            }
+            else
+            {
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                lblMessage.Text = "File Not Found";                
+            }           
         }
+    }
+    //refine the filename before showing on the Files column
+    protected string ExtractData(string fileName)
+    {
+        if (fileName == "")
+        { return fileName; }
+        int Index = fileName.IndexOf('~');
+       if(Index>0)
+        fileName = fileName.Remove(0, Index+1);
+        return fileName;
     }
 }
 

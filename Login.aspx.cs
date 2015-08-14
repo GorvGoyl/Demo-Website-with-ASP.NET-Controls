@@ -16,19 +16,19 @@ public partial class Login : System.Web.UI.Page
     {
         try
         {
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["RegistrationConnectionString"].ConnectionString);
-            conn.Open();
-            string checkuser = "select count(*) from UserData where UserName = '" + TextBox_Login_Username.Text + "'";
-            SqlCommand com = new SqlCommand(checkuser, conn);
-            int temp = Convert.ToInt32(com.ExecuteScalar().ToString());
-            conn.Close();
-            if (temp > 0)
+            SqlConnection Conn = new SqlConnection(ConfigurationManager.ConnectionStrings["RegistrationConnectionString"].ConnectionString);
+            Conn.Open();
+            string CheckUser = "select count(*) from UserData where UserName = '" + TextBox_Login_Username.Text + "'";
+            SqlCommand Com = new SqlCommand(CheckUser, Conn);
+            int Result = Convert.ToInt32(Com.ExecuteScalar().ToString());
+            Conn.Close();
+            if (Result > 0)
             {
-                conn.Open();
+                Conn.Open();
                 string PasswordCheck = "select password from UserData where Password = '" + TextBox_Login_Password.Text + "'";
-                SqlCommand PassCom = new SqlCommand(PasswordCheck, conn);
+                SqlCommand PassCom = new SqlCommand(PasswordCheck, Conn);
                 string Password = PassCom.ExecuteScalar().ToString().Replace(" ","");
-                conn.Close();
+                Conn.Close();
                 if (Password == TextBox_Login_Password.Text)
                 {
                     Session["New"] = TextBox_Login_Username.Text;

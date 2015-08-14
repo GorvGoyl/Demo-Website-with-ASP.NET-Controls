@@ -52,7 +52,7 @@ public class UserDataAccessLayer
         {
             SqlCommand cmd = new SqlCommand
                 ("Delete from UserData where ID = @ID", con);
-            SqlParameter param = new SqlParameter("@ID", ID);
+            SqlParameter param = new SqlParameter("@ID", id);
             cmd.Parameters.Add(param);
             con.Open();
             cmd.ExecuteNonQuery();

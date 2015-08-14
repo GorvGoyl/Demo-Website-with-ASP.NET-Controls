@@ -15,17 +15,17 @@ public partial class Registration : System.Web.UI.Page
         {
             try
             {
-                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["RegistrationConnectionString"].ConnectionString);
-                conn.Open();
-                string checkuser = "select count(*) from UserData where UserName = '" + TextBox_Username.Text + "'";
-                SqlCommand com = new SqlCommand(checkuser, conn);
-                int temp = Convert.ToInt32(com.ExecuteScalar().ToString());
-                if (temp > 0)
+                SqlConnection Conn = new SqlConnection(ConfigurationManager.ConnectionStrings["RegistrationConnectionString"].ConnectionString);
+                Conn.Open();
+                string CheckUser = "select count(*) from UserData where UserName = '" + TextBox_Username.Text + "'";
+                SqlCommand Com = new SqlCommand(CheckUser, Conn);
+                int Result = Convert.ToInt32(Com.ExecuteScalar().ToString());
+                if (Result > 0)
                 {
                     Response.Write("User already exists boss!");
                     i = 1;
                 }
-                conn.Close();
+                Conn.Close();
             }
             catch (Exception)
             {
@@ -42,17 +42,17 @@ public partial class Registration : System.Web.UI.Page
 
             try
             {
-                Guid newGUID = Guid.NewGuid();
+                Guid NewGUID = Guid.NewGuid();
                 SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["RegistrationConnectionString"].ConnectionString);
                 conn.Open();
-                string insertquery = "insert into UserData (ID,UserName,Email,Password,Country) values (@id,@Uname,@email,@password,@country)";
-                SqlCommand com = new SqlCommand(insertquery, conn);
-                com.Parameters.AddWithValue("@id", newGUID.ToString());
-                com.Parameters.AddWithValue("@Uname", TextBox_Username.Text);
-                com.Parameters.AddWithValue("@email", TextBox_Email.Text);
-                com.Parameters.AddWithValue("@password", TextBox_Password.Text);
-                com.Parameters.AddWithValue("@country", DropDownListCountry.SelectedItem.ToString());
-                com.ExecuteNonQuery();
+                string InsertQuery = "insert into UserData (ID,UserName,Email,Password,Country) values (@id,@Uname,@email,@password,@country)";
+                SqlCommand Com = new SqlCommand(InsertQuery, conn);
+                Com.Parameters.AddWithValue("@id", NewGUID.ToString());
+                Com.Parameters.AddWithValue("@Uname", TextBox_Username.Text);
+                Com.Parameters.AddWithValue("@email", TextBox_Email.Text);
+                Com.Parameters.AddWithValue("@password", TextBox_Password.Text);
+                Com.Parameters.AddWithValue("@country", DropDownListCountry.SelectedItem.ToString());
+                Com.ExecuteNonQuery();
                 conn.Close();
                 Response.Write("Registration is Successful");
                 TextBox_Username.Text = "";
